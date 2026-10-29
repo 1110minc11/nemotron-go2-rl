@@ -37,7 +37,9 @@ on an empty flat plane, and a Claude Code plugin runs and reports the loop. Stag
 |---|---|
 | `nemotron_go2_rl/cases/` | Nemotron 클라이언트(표준 라이브러리만), 프롬프트, 스키마·검증기, repair/guard 루프 |
 | `nemotron_go2_rl/tasks/` | Isaac Lab 태스크: 경우 기반 속도 명령 term, 평지 환경, PPO 설정 |
-| `scripts/generate_cases.py` | Nemotron → 검증된 카탈로그 JSON |
+| `scripts/generate_cases.py` | Nemotron → 검증된 걷기 카탈로그 JSON |
+| `nemotron_go2_rl/obstacles/` | 2단계: 장애물 시나리오 스키마·검증기, 배치 샘플러, OBB 기하 |
+| `scripts/generate_obstacle_cases.py` · `train_avoid.py` · `evaluate_avoid.py` · `record_avoid.py` · `report_avoid.py` | 2단계: 장애물 시나리오 생성 · 학습 · 평가 · 영상 · 리포트 |
 | `scripts/train.py` · `evaluate.py` · `record.py` · `report.py` | 학습 · 경우별 평가 · 영상 · 차트/표 |
 | `configs/cases/` | Nemotron이 만든 카탈로그 (생성 모델, 프롬프트 해시, 시도 기록, 자동 수정 내역 포함) |
 | `plugins/nemotron-go2-rl/` | Claude Code 플러그인 `go2-walk-lab` (스킬 3개) |
@@ -101,6 +103,7 @@ Isaac Sim 캐시 위치를 바꿔야 하는 환경이면 각 명령 뒤에 `--ki
 - `/go2-walk` — 1단계 전체: 환경 점검 → 경우 생성·검토 → 학습 → 평가 → 영상 → 보고서
 - `/go2-walk-cases` — Nemotron 카탈로그 생성·수정, 검증기 규칙 설명
 - `/go2-walk-train` — 학습·대조군·평가·녹화·리포트 명령
+- `/go2-obstacles` — 2단계: 장애물 시나리오 설계(Nemotron) → 학습 → 평가 → 영상
 
 `nemotron-customize`는 이후 단계에서 채택된 카탈로그로 "경우 설계용" Nemotron을 SFT/RL로 미세조정할 때 쓰는 경로다.
 1단계 실행에는 필요 없다.
@@ -129,6 +132,22 @@ Nemotron 3.5 Lightning이 16개 경우를 만들었고(검증기 수정 요청 2
 ![success by case](docs/results/success_by_case.png)
 
 자세한 설정·수치·한계는 [docs/stage1_walk.md](docs/stage1_walk.md).
+
+## 결과 (2단계: 장애물)
+
+Nemotron이 장애물 시나리오 16개(상자 하나, 흩어진 장애물, 지그재그, 문, 벽의 문, 복도, 옆 장애물 등)를 설계했고, 1단계 걷기 정책을 고정한 채
+목표 도달·회피 정책을 350 iteration(44분) 추가 학습했다. 시나리오 16개 × 64대, 같은 배치로 평가했다.
+
+| 정책 | 성공 | 충돌 |
+|---|---|---|
+| model_247 (사전 학습, 추가 학습 없음) | 95.7 % | 4.0 % |
+| 단일 상자로 추가 학습 (대조군) | 93.7 % | 6.3 % |
+| **Nemotron 시나리오로 추가 학습** | **98.2 %** | **0.8 %** |
+
+좁은 복도 73 → 89 %, 대조군은 오히려 66 %. 회귀도 있다(지그재그 100 → 94 %). 벽 시나리오는 돌아가도 성공으로 세고, 학습 seed는 1개다.
+영상: [사전 학습 vs Nemotron 복도 8회](docs/media/stage2_corridor_zeroshot_vs_nemotron.mp4) · 자세한 내용은 [docs/stage2_obstacles.md](docs/stage2_obstacles.md).
+
+![stage 2](docs/results_stage2/success_by_scenario.png)
 
 ## 한계
 

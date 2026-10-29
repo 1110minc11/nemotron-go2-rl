@@ -60,6 +60,11 @@ configs/prompts/baseline_findings.txt ─┐
 - Add Isaac Sim kit args from the project docs (e.g. a `--portable-root` inside the workspace) when
   the local setup requires them.
 
+## Next stage
+
+Obstacles (stage 2) are handled by the `go2-obstacles` skill: Nemotron designs obstacle scenarios, the same validate / repair /
+guard loop gates them, and PPO fine-tunes goal reaching with LiDAR avoidance on top of this stage's frozen walking policy.
+
 ## Related plugin
 
 NVIDIA's `nemotron-customize` plugin (`/plugin install nemotron-customize@nvidia-nemotron`) builds

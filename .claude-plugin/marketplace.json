@@ -9,10 +9,17 @@
     {
       "name": "go2-walk-lab",
       "source": "./plugins/nemotron-go2-rl",
-      "description": "Nemotron writes the walking cases, Isaac Lab PPO learns them, Claude runs and reports the loop (Unitree Go2, flat empty world).",
-      "version": "0.1.0",
+      "description": "Nemotron designs walking cases (stage 1) and obstacle scenarios (stage 2), Isaac Lab PPO learns them, Claude runs and reports the loop (Unitree Go2).",
+      "version": "0.2.0",
       "category": "robotics",
-      "keywords": ["nemotron", "isaac-lab", "reinforcement-learning", "unitree-go2", "locomotion", "curriculum"]
+      "keywords": [
+        "nemotron",
+        "isaac-lab",
+        "reinforcement-learning",
+        "unitree-go2",
+        "locomotion",
+        "curriculum"
+      ]
     }
   ]
 }

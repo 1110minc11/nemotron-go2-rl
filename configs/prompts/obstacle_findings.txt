@@ -1,0 +1,6 @@
+# Known weaknesses of the lab's current goal-reaching policies (unitree_rl_lab model_247 / LAB_3 model_843), one per line.
+# Appended to the Nemotron prompt for obstacle-scenario design.
+model_247 was trained with exactly one fixed-size 0.6 x 0.9 m box that blocks the straight path 80 % of the time; doorways, walls and several obstacles were never trained.
+In the real LAB_3 room the policy collided most often in narrow passages and when turning sharply near corners (about 3 % collisions on held-out episodes).
+The front-only 180 degree LiDAR cannot see obstacles behind the robot, so goals behind the robot require turning in place before moving.
+A policy that overreacts to harmless side obstacles wastes time; obstacles beside the path should not make it detour.
