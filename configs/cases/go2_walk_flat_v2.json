@@ -1,0 +1,529 @@
+{
+  "schema_version": 1,
+  "name": "go2_walk_flat_v2",
+  "robot": "unitree_go2",
+  "environment": "flat_empty_plane",
+  "generator": {
+    "model": "nemotron-3.5-lightning:30b",
+    "base_url": "http://localhost:11434/v1",
+    "temperature": 0.6,
+    "seed": 7,
+    "created_utc": "2026-10-29T05:21:15+00:00",
+    "prompt_sha256": "e81b78c4ac7b2125670bc4afd798ad1a53c9bfc870c6931546013c147ec695ba",
+    "attempts": [
+      {
+        "attempt": 1,
+        "seconds": 258.3,
+        "usage": {
+          "prompt_tokens": 18817,
+          "completion_tokens": 2478,
+          "total_tokens": 21295
+        },
+        "num_cases": 16,
+        "fixes": 0,
+        "problems": [
+          "robustness.push_velocity_mps is 0; use at least 0.2 m/s so the policy learns to recover from pushes"
+        ]
+      },
+      {
+        "attempt": 2,
+        "seconds": 150.5,
+        "usage": {
+          "prompt_tokens": 14353,
+          "completion_tokens": 2478,
+          "total_tokens": 16831
+        },
+        "num_cases": 16,
+        "fixes": 0,
+        "problems": []
+      }
+    ]
+  },
+  "envelope": {
+    "lin_vel_x": [
+      -1.0,
+      1.0
+    ],
+    "lin_vel_y": [
+      -0.6,
+      0.6
+    ],
+    "ang_vel_z": [
+      -1.5,
+      1.5
+    ],
+    "hold_time_s": [
+      1.0,
+      10.0
+    ]
+  },
+  "robustness_envelope": {
+    "friction": [
+      0.3,
+      1.5
+    ],
+    "added_base_mass_kg": [
+      -1.0,
+      3.0
+    ],
+    "push_velocity_mps": [
+      0.0,
+      1.0
+    ],
+    "push_interval_s": [
+      3.0,
+      15.0
+    ]
+  },
+  "parent": "go2_walk_flat_v1",
+  "findings": [
+    "Below about 0.15 m/s the previous policy often stood still instead of walking; motion only became clear from about 0.3 m/s.",
+    "Low-speed lateral (sideways) stepping was unstable or did not move at all.",
+    "The robust policy was trained with lin_vel_y fixed to 0, so lateral and diagonal walking were never trained.",
+    "Yaw tracking at 0.3 rad/s reached only about 0.18 rad/s on the original policy.",
+    "Case forward_slow: only 78% of robots tracked the command within 20%; mean command [+0.17, +0.00, +0.01] -> measured [+0.13, -0.00, +0.01] (vx, vy, wz).",
+    "Case backward_slow: only 12% of robots tracked the command within 20%; mean command [-0.20, +0.00, -0.01] -> measured [-0.11, -0.00, -0.00] (vx, vy, wz).",
+    "Case lateral_left: only 3% of robots tracked the command within 20%; mean command [-0.00, +0.20, +0.10] -> measured [+0.02, +0.13, +0.13] (vx, vy, wz).",
+    "Case lateral_right: only 6% of robots tracked the command within 20%; mean command [+0.01, -0.21, -0.11] -> measured [+0.02, -0.14, -0.11] (vx, vy, wz).",
+    "Case diagonal_fl: only 88% of robots tracked the command within 20%; mean command [+0.29, +0.20, -0.03] -> measured [+0.27, +0.16, -0.01] (vx, vy, wz).",
+    "These cases already pass (>= 90% success): stand_still, forward_nominal, forward_fast, backward_nominal, diagonal_fr, turn_in_place_cw, turn_in_place_ccw, arc_forward_left, arc_forward_right, omni_slow, omni_fast."
+  ],
+  "cases": [
+    {
+      "id": "stand_still",
+      "category": "stand",
+      "title": "Stand Still",
+      "title_ko": "서기",
+      "difficulty": 1,
+      "weight": 0.0779,
+      "lin_vel_x": [
+        0.0,
+        0.0
+      ],
+      "lin_vel_y": [
+        0.0,
+        0.0
+      ],
+      "ang_vel_z": [
+        0.0,
+        0.0
+      ],
+      "hold_time_s": [
+        1.0,
+        5.0
+      ],
+      "rationale": "Learn to remain stationary and reject disturbances.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_slow",
+      "category": "forward",
+      "title": "Slow Forward Walk",
+      "title_ko": "천천히 전진",
+      "difficulty": 1,
+      "weight": 0.0934,
+      "lin_vel_x": [
+        0.1,
+        0.3
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        1.5,
+        3.0
+      ],
+      "rationale": "Train gait initiation and forward motion at low speeds where policy previously stalled.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_nominal",
+      "category": "forward",
+      "title": "Nominal Forward Walk",
+      "title_ko": "일반 전진",
+      "difficulty": 1,
+      "weight": 0.0545,
+      "lin_vel_x": [
+        0.5,
+        0.8
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Establish stable nominal forward walking gait.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_fast",
+      "category": "forward",
+      "title": "Fast Forward Walk",
+      "title_ko": "빠른 전진",
+      "difficulty": 2,
+      "weight": 0.0389,
+      "lin_vel_x": [
+        0.9,
+        1.0
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        3.0,
+        6.0
+      ],
+      "rationale": "Push forward speed near actuator limits.",
+      "source": "nemotron"
+    },
+    {
+      "id": "backward_slow",
+      "category": "backward",
+      "title": "Slow Backward Walk",
+      "title_ko": "천천히 후진",
+      "difficulty": 1,
+      "weight": 0.0934,
+      "lin_vel_x": [
+        -0.3,
+        -0.1
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        1.5,
+        3.0
+      ],
+      "rationale": "Train backward gait at slow speeds where tracking was poor (12% success).",
+      "source": "nemotron"
+    },
+    {
+      "id": "backward_nominal",
+      "category": "backward",
+      "title": "Nominal Backward Walk",
+      "title_ko": "일반 후진",
+      "difficulty": 1,
+      "weight": 0.0545,
+      "lin_vel_x": [
+        -0.8,
+        -0.5
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Establish stable nominal backward walking gait.",
+      "source": "nemotron"
+    },
+    {
+      "id": "lateral_left",
+      "category": "lateral",
+      "title": "Slow Lateral Left",
+      "title_ko": "좌측 이동",
+      "difficulty": 2,
+      "weight": 0.1012,
+      "lin_vel_x": [
+        -0.05,
+        0.05
+      ],
+      "lin_vel_y": [
+        0.1,
+        0.2
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        1.5,
+        3.0
+      ],
+      "rationale": "Train low-speed lateral stepping and sideways balance; addresses prior instability/no movement.",
+      "source": "nemotron"
+    },
+    {
+      "id": "lateral_right",
+      "category": "lateral",
+      "title": "Slow Lateral Right",
+      "title_ko": "우측 이동",
+      "difficulty": 2,
+      "weight": 0.1012,
+      "lin_vel_x": [
+        -0.05,
+        0.05
+      ],
+      "lin_vel_y": [
+        -0.2,
+        -0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        1.5,
+        3.0
+      ],
+      "rationale": "Train low-speed lateral stepping and sideways balance; addresses prior instability/no movement.",
+      "source": "nemotron"
+    },
+    {
+      "id": "diagonal_fl",
+      "category": "diagonal",
+      "title": "Forward Left Diagonal",
+      "title_ko": "왼쪽 대각",
+      "difficulty": 2,
+      "weight": 0.0623,
+      "lin_vel_x": [
+        0.15,
+        0.35
+      ],
+      "lin_vel_y": [
+        0.1,
+        0.25
+      ],
+      "ang_vel_z": [
+        -0.2,
+        0.2
+      ],
+      "hold_time_s": [
+        2.0,
+        4.0
+      ],
+      "rationale": "Train diagonal forward-left walking at speeds near the gait stall threshold (~0.15 m/s).",
+      "source": "nemotron"
+    },
+    {
+      "id": "diagonal_fr",
+      "category": "diagonal",
+      "title": "Forward Right Diagonal",
+      "title_ko": "오른쪽 대각",
+      "difficulty": 2,
+      "weight": 0.0623,
+      "lin_vel_x": [
+        0.15,
+        0.35
+      ],
+      "lin_vel_y": [
+        -0.25,
+        -0.1
+      ],
+      "ang_vel_z": [
+        -0.2,
+        0.2
+      ],
+      "hold_time_s": [
+        2.0,
+        4.0
+      ],
+      "rationale": "Train diagonal forward-right walking at moderate speeds.",
+      "source": "nemotron"
+    },
+    {
+      "id": "turn_in_place_cw",
+      "category": "turn_in_place",
+      "title": "Clockwise Turn In Place",
+      "title_ko": "시계 회전",
+      "difficulty": 2,
+      "weight": 0.0545,
+      "lin_vel_x": [
+        -0.05,
+        0.05
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -1.2,
+        -0.8
+      ],
+      "hold_time_s": [
+        1.0,
+        2.0
+      ],
+      "rationale": "Train stable clockwise rotation in place.",
+      "source": "nemotron"
+    },
+    {
+      "id": "turn_in_place_ccw",
+      "category": "turn_in_place",
+      "title": "Counterclockwise Turn In Place",
+      "title_ko": "반시계 회전",
+      "difficulty": 2,
+      "weight": 0.0545,
+      "lin_vel_x": [
+        -0.05,
+        0.05
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        0.8,
+        1.2
+      ],
+      "hold_time_s": [
+        1.0,
+        2.0
+      ],
+      "rationale": "Train stable counterclockwise rotation in place.",
+      "source": "nemotron"
+    },
+    {
+      "id": "arc_forward_left",
+      "category": "arc",
+      "title": "Forward Left Arc",
+      "title_ko": "전진 좌회전",
+      "difficulty": 3,
+      "weight": 0.0433,
+      "lin_vel_x": [
+        0.4,
+        0.6
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        0.8,
+        1.2
+      ],
+      "hold_time_s": [
+        2.0,
+        4.0
+      ],
+      "rationale": "Train forward walking with leftward turning arc.",
+      "source": "nemotron"
+    },
+    {
+      "id": "arc_forward_right",
+      "category": "arc",
+      "title": "Forward Right Arc",
+      "title_ko": "전진 우회전",
+      "difficulty": 3,
+      "weight": 0.0433,
+      "lin_vel_x": [
+        0.4,
+        0.6
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -1.2,
+        -0.8
+      ],
+      "hold_time_s": [
+        2.0,
+        4.0
+      ],
+      "rationale": "Train forward walking with rightward turning arc.",
+      "source": "nemotron"
+    },
+    {
+      "id": "omni_slow",
+      "category": "omni",
+      "title": "Slow Omni Direction",
+      "title_ko": "느린 전방위",
+      "difficulty": 2,
+      "weight": 0.036,
+      "lin_vel_x": [
+        0.1,
+        0.3
+      ],
+      "lin_vel_y": [
+        -0.2,
+        0.2
+      ],
+      "ang_vel_z": [
+        -0.3,
+        0.3
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Train omnidirectional walking at slow speeds.",
+      "source": "nemotron"
+    },
+    {
+      "id": "omni_fast",
+      "category": "omni",
+      "title": "Fast Omni Direction",
+      "title_ko": "빠른 전방위",
+      "difficulty": 3,
+      "weight": 0.0288,
+      "lin_vel_x": [
+        0.7,
+        1.0
+      ],
+      "lin_vel_y": [
+        -0.5,
+        0.5
+      ],
+      "ang_vel_z": [
+        -1.2,
+        1.2
+      ],
+      "hold_time_s": [
+        3.0,
+        6.0
+      ],
+      "rationale": "Train omnidirectional walking at fast speeds near envelope.",
+      "source": "nemotron"
+    }
+  ],
+  "robustness": {
+    "rationale": "Randomise friction, base mass, and periodic lateral pushes to improve recovery skills and simulate uneven terrain disturbances.",
+    "friction": [
+      0.3,
+      1.5
+    ],
+    "added_base_mass_kg": [
+      -1.0,
+      3.0
+    ],
+    "push_interval_s": [
+      3.0,
+      15.0
+    ],
+    "push_velocity_mps": 0.2
+  },
+  "validation": {
+    "auto_fixes": [],
+    "guard": []
+  }
+}

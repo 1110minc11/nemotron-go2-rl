@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# training / evaluation artifacts (large); curated results live in docs/ and policies/
+logs/
+outputs/
+
+# machine-local Claude Code settings (absolute marketplace path)
+.claude/settings.local.json

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nemotron-go2-rl",
+  "description": "Claude Code plugins for designing Go2 locomotion curricula with NVIDIA Nemotron and training them in Isaac Lab",
+  "owner": {
+    "name": "nemotron-go2-rl contributors"
+  },
+  "plugins": [
+    {
+      "name": "go2-walk-lab",
+      "source": "./plugins/nemotron-go2-rl",
+      "description": "Nemotron writes the walking cases, Isaac Lab PPO learns them, Claude runs and reports the loop (Unitree Go2, flat empty world).",
+      "version": "0.1.0",
+      "category": "robotics",
+      "keywords": ["nemotron", "isaac-lab", "reinforcement-learning", "unitree-go2", "locomotion", "curriculum"]
+    }
+  ]
+}

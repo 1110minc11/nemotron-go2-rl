@@ -1,0 +1,13 @@
+nemotron-go2-rl
+Copyright 2026 nemotron-go2-rl contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It builds on the following open-source projects, which keep their own licenses:
+- Isaac Lab (BSD-3-Clause) - https://github.com/isaac-sim/IsaacLab
+- unitree_rl_lab (Apache-2.0) - https://github.com/unitreerobotics/unitree_rl_lab
+- RSL-RL (BSD-3-Clause) - https://github.com/leggedrobotics/rsl_rl
+- NVIDIA Nemotron developer repository and Claude Code plugin (Apache-2.0) - https://github.com/NVIDIA-NeMo/Nemotron
+
+NVIDIA Nemotron model weights are distributed separately by NVIDIA under the
+NVIDIA Open Model License; they are not included in this repository.

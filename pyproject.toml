@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nemotron-go2-rl"
+version = "0.1.0"
+description = "NVIDIA Nemotron designs the walking cases, Isaac Lab PPO learns them: Unitree Go2 locomotion with a Claude Code plugin"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+# Case generation uses only the standard library. Training/evaluation run inside an
+# Isaac Lab 2.3 environment that also has unitree_rl_lab installed (see README).
+dependencies = []
+
+[project.optional-dependencies]
+report = ["matplotlib", "tensorboard"]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["nemotron_go2_rl*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

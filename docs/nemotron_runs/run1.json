@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "name": "go2_walk_flat_v1",
+  "robot": "unitree_go2",
+  "environment": "flat_empty_plane",
+  "generator": {
+    "model": "nemotron-3.5-lightning:30b",
+    "base_url": "http://localhost:11434/v1",
+    "temperature": 0.6,
+    "seed": 7,
+    "created_utc": "2026-10-29T03:35:47+00:00",
+    "prompt_sha256": "2b011c537b34bd9cc89b940bb78145184060a2442b387e16092948995fbd1935",
+    "attempts": [
+      {
+        "attempt": 1,
+        "seconds": 306.8,
+        "usage": {
+          "prompt_tokens": 20129,
+          "completion_tokens": 2365,
+          "total_tokens": 22494
+        },
+        "num_cases": 16,
+        "fixes": 0,
+        "problems": []
+      }
+    ]
+  },
+  "envelope": {
+    "lin_vel_x": [
+      -1.0,
+      1.0
+    ],
+    "lin_vel_y": [
+      -0.6,
+      0.6
+    ],
+    "ang_vel_z": [
+      -1.5,
+      1.5
+    ],
+    "hold_time_s": [
+      1.0,
+      10.0
+    ]
+  },
+  "robustness_envelope": {
+    "friction": [
+      0.3,
+      1.5
+    ],
+    "added_base_mass_kg": [
+      -1.0,
+      3.0
+    ],
+    "push_velocity_mps": [
+      0.0,
+      1.0
+    ],
+    "push_interval_s": [
+      3.0,
+      15.0
+    ]
+  },
+  "findings": [
+    "Below about 0.15 m/s the previous policy often stood still instead of walking; motion only became clear from about 0.3 m/s.",
+    "Low-speed lateral (sideways) stepping was unstable or did not move at all.",
+    "The robust policy was trained with lin_vel_y fixed to 0, so lateral and diagonal walking were never trained.",
+    "Yaw tracking at 0.3 rad/s reached only about 0.18 rad/s on the original policy."
+  ],
+  "cases": [
+    {
+      "id": "stand_still",
+      "category": "stand",
+      "title": "Stand still",
+      "title_ko": "서 있기",
+      "difficulty": 1,
+      "weight": 0.069,
+      "lin_vel_x": [
+        0.0,
+        0.0
+      ],
+      "lin_vel_y": [
+        0.0,
+        0.0
+      ],
+      "ang_vel_z": [
+        0.0,
+        0.0
+      ],
+      "hold_time_s": [
+        5.0,
+        10.0
+      ],
+      "rationale": "Train static stability and zero-velocity command acceptance.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_slow",
+      "category": "forward",
+      "title": "Slow forward walk",
+      "title_ko": "천천히 전진하기",
+      "difficulty": 1,
+      "weight": 0.1034,
+      "lin_vel_x": [
+        0.1,
+        0.3
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        8.0,
+        10.0
+      ],
+      "rationale": "Train walking at speeds where previous policy stalled, building gait confidence.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_nominal",
+      "category": "forward",
+      "title": "Nominal forward walk",
+      "title_ko": "정상 전진하기",
+      "difficulty": 1,
+      "weight": 0.1034,
+      "lin_vel_x": [
+        0.5,
+        0.8
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        6.0,
+        8.0
+      ],
+      "rationale": "Train at typical operating speeds for navigation.",
+      "source": "nemotron"
+    },
+    {
+      "id": "forward_fast",
+      "category": "forward",
+      "title": "Fast forward walk",
+      "title_ko": "빠른 전진하기",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        0.9,
+        1.0
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        5.0,
+        7.0
+      ],
+      "rationale": "Train near-maximum speed stability and dynamic gait.",
+      "source": "nemotron"
+    },
+    {
+      "id": "backward_slow",
+      "category": "backward",
+      "title": "Slow backward walk",
+      "title_ko": "천천히 후진하기",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.3,
+        -0.1
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        7.0,
+        9.0
+      ],
+      "rationale": "Train backward gait initiation at low speeds.",
+      "source": "nemotron"
+    },
+    {
+      "id": "backward_nominal",
+      "category": "backward",
+      "title": "Nominal backward walk",
+      "title_ko": "정상 후진하기",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.8,
+        -0.5
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        6.0,
+        8.0
+      ],
+      "rationale": "Train stable backward walking at nominal speeds.",
+      "source": "nemotron"
+    },
+    {
+      "id": "lateral_left_slow",
+      "category": "lateral",
+      "title": "Slow left strafe",
+      "title_ko": "천천히 좌측 옆걸음",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.1,
+        0.1
+      ],
+      "lin_vel_y": [
+        0.1,
+        0.3
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        6.0,
+        8.0
+      ],
+      "rationale": "Train low-speed lateral stepping, addressing previous instability at slow lateral speeds.",
+      "source": "nemotron"
+    },
+    {
+      "id": "lateral_right_slow",
+      "category": "lateral",
+      "title": "Slow right strafe",
+      "title_ko": "천천히 우측 옆걸음",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.1,
+        0.1
+      ],
+      "lin_vel_y": [
+        -0.3,
+        -0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        6.0,
+        8.0
+      ],
+      "rationale": "Train lateral movement in opposite direction, ensuring both-sign coverage.",
+      "source": "nemotron"
+    },
+    {
+      "id": "diagonal_fwd_left",
+      "category": "diagonal",
+      "title": "Forward left diagonal walk",
+      "title_ko": "전진-좌측 대각선 걸음",
+      "difficulty": 2,
+      "weight": 0.0345,
+      "lin_vel_x": [
+        0.3,
+        0.5
+      ],
+      "lin_vel_y": [
+        0.1,
+        0.2
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        5.0,
+        7.0
+      ],
+      "rationale": "Train simultaneous forward and lateral motion, never previously covered.",
+      "source": "nemotron"
+    },
+    {
+      "id": "diagonal_fwd_right",
+      "category": "diagonal",
+      "title": "Forward right diagonal walk",
+      "title_ko": "전진-우측 대각선 걸음",
+      "difficulty": 2,
+      "weight": 0.0345,
+      "lin_vel_x": [
+        0.3,
+        0.5
+      ],
+      "lin_vel_y": [
+        -0.2,
+        -0.1
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        5.0,
+        7.0
+      ],
+      "rationale": "Train forward-right diagonal motion.",
+      "source": "nemotron"
+    },
+    {
+      "id": "turn_left_in_place",
+      "category": "turn_in_place",
+      "title": "Turn left in place",
+      "title_ko": "제자리 왼쪽 회전",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.1,
+        0.1
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        0.5,
+        1.0
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Train high-yaw tracking and pivot turning, addressing previous yaw tracking limit.",
+      "source": "nemotron"
+    },
+    {
+      "id": "turn_right_in_place",
+      "category": "turn_in_place",
+      "title": "Turn right in place",
+      "title_ko": "제자리 오른쪽 회전",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        -0.1,
+        0.1
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        -1.0,
+        -0.5
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Train rightward pivot turning for symmetric yaw competence.",
+      "source": "nemotron"
+    },
+    {
+      "id": "arc_fwd_left",
+      "category": "arc",
+      "title": "Forward walk with left turn",
+      "title_ko": "전진 좌회전 아크 걸음",
+      "difficulty": 3,
+      "weight": 0.0345,
+      "lin_vel_x": [
+        0.5,
+        0.8
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        0.3,
+        0.6
+      ],
+      "hold_time_s": [
+        5.0,
+        8.0
+      ],
+      "rationale": "Train combined forward motion and turning, simulating curved path navigation.",
+      "source": "nemotron"
+    },
+    {
+      "id": "arc_bwd_right",
+      "category": "arc",
+      "title": "Backward walk with right turn",
+      "title_ko": "후진 우회전 아크 걸음",
+      "difficulty": 3,
+      "weight": 0.0345,
+      "lin_vel_x": [
+        -0.8,
+        -0.5
+      ],
+      "lin_vel_y": [
+        -0.1,
+        0.1
+      ],
+      "ang_vel_z": [
+        -0.6,
+        -0.3
+      ],
+      "hold_time_s": [
+        5.0,
+        8.0
+      ],
+      "rationale": "Train backward-arc motion for complete trajectory coverage.",
+      "source": "nemotron"
+    },
+    {
+      "id": "lateral_fast",
+      "category": "lateral",
+      "title": "Fast sideways strafe",
+      "title_ko": "빠른 옆걸음",
+      "difficulty": 3,
+      "weight": 0.0345,
+      "lin_vel_x": [
+        -0.1,
+        0.1
+      ],
+      "lin_vel_y": [
+        0.5,
+        0.6
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        3.0,
+        5.0
+      ],
+      "rationale": "Train high-speed lateral motion at the velocity envelope boundary.",
+      "source": "nemotron"
+    },
+    {
+      "id": "fwd_stop_go",
+      "category": "forward",
+      "title": "Quick forward stop",
+      "title_ko": "빠른 전진 정지",
+      "difficulty": 2,
+      "weight": 0.069,
+      "lin_vel_x": [
+        0.3,
+        0.6
+      ],
+      "lin_vel_y": [
+        -0.05,
+        0.05
+      ],
+      "ang_vel_z": [
+        -0.1,
+        0.1
+      ],
+      "hold_time_s": [
+        1.0,
+        2.0
+      ],
+      "rationale": "Train rapid command transitions and gait switching between movement and stand.",
+      "source": "nemotron"
+    }
+  ],
+  "robustness": {
+    "rationale": "Apply domain randomization across friction, base mass, and external pushes to improve policy robustness to real-world variance.",
+    "friction": [
+      0.3,
+      1.5
+    ],
+    "added_base_mass_kg": [
+      -1.0,
+      3.0
+    ],
+    "push_interval_s": [
+      3.0,
+      15.0
+    ],
+    "push_velocity_mps": 0.0
+  },
+  "validation": {
+    "auto_fixes": [],
+    "guard": []
+  }
+}

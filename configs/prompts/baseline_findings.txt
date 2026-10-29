@@ -1,0 +1,6 @@
+# Weaknesses measured on the lab's previous Go2 walking policies (unitree_rl_lab model_3300 / robust model_4099).
+# One finding per line; they are appended to the Nemotron prompt.
+Below about 0.15 m/s the previous policy often stood still instead of walking; motion only became clear from about 0.3 m/s.
+Low-speed lateral (sideways) stepping was unstable or did not move at all.
+The robust policy was trained with lin_vel_y fixed to 0, so lateral and diagonal walking were never trained.
+Yaw tracking at 0.3 rad/s reached only about 0.18 rad/s on the original policy.

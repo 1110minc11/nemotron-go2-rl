@@ -1,0 +1,14 @@
+{
+  "enabledPlugins": {
+    "nemotron-customize@nvidia-nemotron": true,
+    "go2-walk-lab@nemotron-go2-rl": true
+  },
+  "extraKnownMarketplaces": {
+    "nvidia-nemotron": {
+      "source": {
+        "source": "github",
+        "repo": "NVIDIA-NeMo/Nemotron"
+      }
+    }
+  }
+}
