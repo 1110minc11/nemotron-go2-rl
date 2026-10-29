@@ -44,6 +44,11 @@ configs/prompts/baseline_findings.txt ─┐
 5. **Record** `scripts/record.py` for each policy, then compose a side-by-side with `ffmpeg hstack`.
 6. **Report**: `scripts/report.py` writes charts and a markdown table; update `docs/` with the
    numbers that were actually measured. Do not round failures into successes.
+7. **Feedback (optional)**: hand the evaluation back to Nemotron so it revises the catalog
+   (`generate_cases.py --previous <catalog> --feedback-eval <eval.json> --feedback-policy <label>`),
+   fine-tune from the last checkpoint with `--resume_path` and the hydra override
+   `env.commands.base_velocity.level_up_steps=[0,0]`, and evaluate on the *original* cases.
+   Keep the previous policy unless the new one is better on that same test set.
 
 ## Rules
 

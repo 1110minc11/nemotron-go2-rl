@@ -27,6 +27,17 @@ python scripts/generate_cases.py --base-url https://integrate.api.nvidia.com/v1 
 Useful flags: `--num-cases` (10–24), `--max-attempts` (repair rounds), `--temperature`, `--seed`,
 `--findings <file>` (known weaknesses appended to the prompt; `''` to skip), `--keep-loaded`.
 
+Revise a catalog from an evaluation (closes the Nemotron ↔ RL loop):
+
+```bash
+python scripts/generate_cases.py --name go2_walk_flat_v2 --out configs/cases/go2_walk_flat_v2.json \
+    --previous configs/cases/go2_walk_flat_v1.json \
+    --feedback-eval outputs/eval/stage1.json --feedback-policy "<policy label in that JSON>"
+```
+
+Cases below 90 % success become findings (with commanded vs measured velocity); the previous
+catalog is included so Nemotron edits it instead of starting over.
+
 ## What the validator does (`nemotron_go2_rl/cases/schema.py`)
 
 - clamps every range to the Go2 envelope (vx ±1.0 m/s, vy ±0.6 m/s, wz ±1.5 rad/s, hold 1–10 s)

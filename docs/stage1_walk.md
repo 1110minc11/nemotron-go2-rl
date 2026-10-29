@@ -122,7 +122,33 @@ iteration 약 150에 넘어지지 않게 됐고, 균등 대조군은 약 600이 
 
 ![4 policies](media/stage1_compare_frame.png)
 
-## 6. 재현
+## 6. 피드백 루프 1회: 평가 결과 → Nemotron → 추가 학습
+
+`generate_cases.py --previous v1 --feedback-eval stage1.json --feedback-policy "Nemotron 경우 학습"`으로 v1 정책의 경우별 실패
+(성공률 90 % 미만 5개 경우, 측정 속도 포함)를 Nemotron에 되돌려 주고 카탈로그를 고치게 했다 → `configs/cases/go2_walk_flat_v2.json`
+(2회 시도: 밀기 0으로 되돌아간 문제 1건 → 0, guard 없음).
+
+Nemotron이 바꾼 것: 저속 전진·후진 가중치 0.069 → 0.093, 옆걸음 0.069 → 0.101(좌우 각각), 저속 경우 유지 시간 2–4 s → 1.5–3 s,
+옆걸음 범위 0.1–0.3 → 0.1–0.2 m/s로 좁히고 섞여 있던 회전 제거, 대각선을 더 느린 쪽으로 넓힘, 이미 통과한 경우의 가중치는 낮춤.
+
+v1 `model_1499`에서 v2 카탈로그로 500 iteration 추가 학습(seed 43, 처음부터 난이도 3, 8분 6초) → `model_1998`.
+같은 v1 경우·같은 seed로 평가 (`outputs/eval/stage1_feedback.json`):
+
+| 경우 | v1 model_1499 | v2 피드백 model_1998 |
+|---|---|---|
+| 경우 평균 성공률 | **79.7 %** | 78.5 % |
+| backward_slow | 12 % | **53 %** |
+| diagonal_fl / fr | 88 % / 100 % | 94 % / 94 % |
+| forward_slow | **78 %** | 47 % |
+| omni_slow | **91 %** | 66 % |
+| lateral_left / right | 3 % / 6 % | 0 % / 3 % |
+
+**전체로는 개선되지 않았다.** 저속 후진은 좋아졌지만 저속 전진·저속 전방위가 나빠졌고, 저속 옆걸음은 그대로다.
+경우를 더 자주·더 짧게 뽑는 것만으로는 저속 추종이 풀리지 않는다는 뜻이며, 4절의 해석(보상이 저속 오차를 거의 벌하지 않음)과 맞는다.
+그래서 1단계 대표 정책은 v1 `model_1499`로 둔다. 다음 단계에서는 Nemotron이 경우와 함께 보상 설정(예: 추종 보상 폭, 저속 정지 판정 문턱)도
+제안하게 하고, 같은 검증기 방식으로 범위를 제한하는 것을 시험할 계획이다.
+
+## 7. 재현
 
 ```bash
 conda activate isaac-sim                          # Isaac Lab 2.3 + unitree_rl_lab
