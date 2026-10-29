@@ -9,6 +9,12 @@
         "source": "github",
         "repo": "NVIDIA-NeMo/Nemotron"
       }
+    },
+    "nemotron-go2-rl": {
+      "source": {
+        "source": "github",
+        "repo": "1110minc11/nemotron-go2-rl"
+      }
     }
   }
 }

@@ -58,7 +58,7 @@ Nemotron 엔드포인트 하나.
 # 1) Isaac Lab 2.3 환경에 unitree_rl_lab 설치 (그 저장소 README 참고)
 conda activate isaac-sim            # Isaac Lab이 설치된 환경 이름
 # 2) 이 저장소 (설치 없이 scripts/가 경로를 잡는다. 패키지로 쓰려면 pip install -e .)
-git clone <this repo> && cd nemotron-go2-rl
+git clone https://github.com/1110minc11/nemotron-go2-rl.git && cd nemotron-go2-rl
 # 3) Nemotron (로컬)
 ollama pull nemotron-3.5-lightning:30b   # 25 GB. 작은 대안: nemotron-3-nano:4b
 ```
@@ -90,7 +90,7 @@ Isaac Sim 캐시 위치를 바꿔야 하는 환경이면 각 명령 뒤에 `--ki
 ## Claude Code에서 쓰기
 
 ```text
-/plugin marketplace add <this repo or local path>
+/plugin marketplace add 1110minc11/nemotron-go2-rl
 /plugin install go2-walk-lab@nemotron-go2-rl
 /plugin marketplace add NVIDIA-NeMo/Nemotron            # 선택: Nemotron 쪽 학습 파이프라인
 /plugin install nemotron-customize@nvidia-nemotron
